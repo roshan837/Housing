@@ -1,4 +1,3 @@
-//dom Elements
 const productDom = document.querySelector(".products-center");
 const cartDom = document.querySelector(".cart-content");
 const cartMain = document.querySelector(".cart");
@@ -18,16 +17,13 @@ const closeBuyModal = document.querySelector(".close-buy-modal");
 const btnBuy = document.querySelector(".btn-buy");
 const totalBuyPrice = document.querySelector(".total-Buy-Price");
 
-//cart products
 let cart = [];
-// let itemNo = 1;
 
-//products class
 class Products {
   async getProducts() {
     try {
-      const result = await fetch("data/products.json"); //returns response object
-      let products = await result.json(); // to get the data from response object
+      const result = await fetch("data/products.json");
+      let products = await result.json();
       let data = products.items;
       data = data.map((item) => {
         const { title, price, type, rating } = item.fields;
@@ -49,7 +45,7 @@ class UserInterface {
     products.forEach((element) => {
       let star="";
       for(let i = 0; i<element.rating;i++){
-        star += `<i class="fas fa-star"></i>` //gives a filled star
+        star += `<i class="fas fa-star"></i>`
       }
       for(let i = 0; i<5-element.rating;i++){
         star += `<i class="far fa-star"></i>`
@@ -127,7 +123,7 @@ class UserInterface {
     //convert nodelist into an array
     let buttons = [...document.querySelectorAll(".bag-btn")];
     buttons.forEach((btn) => {
-      // getting id from data attribute --->data-id
+      
       let id = btn.dataset.id;
       let incart = cart.find((items) => items.id === id);
       if (incart) {
@@ -152,18 +148,18 @@ class UserInterface {
       btn.addEventListener("click", (event) => {
         event.target.innerHTML = "In Cart";
         event.target.disabled = true;
-        //get the selected products
+        
         let selectedProduct = Storage.getLocalProduct(event.target.dataset.id);
-        //update the cartItems
+        
         selectedProduct = { ...selectedProduct, amount: 1 };
         cart = [...cart, selectedProduct];
-        //updating cart in localStorag
+        
         Storage.setCartItems(cart);
-        //setting the cart values
+        
         this.setCartValues(cart);
-        //show cart values
+        
         this.addCartItems(cart);
-        //adding show class
+        
         this.showCart();
       });
     });
@@ -178,20 +174,20 @@ class UserInterface {
         );
         cart.splice(index, 1);
         Storage.setCartItems(cart);
-        //setting the cart values
+        
         this.setCartValues(cart);
-        // will add updated cart html in in the cart
+        
         this.addCartItems(cart);
-        //resetting buttons
+        
         this.resetButtons();
       }
       if (event.target.classList.contains("fa-plus-circle")) {
         let tempItem = cart.find(item => item.id === event.target.parentElement.dataset.id)
         tempItem.amount = tempItem.amount + 1
         Storage.setCartItems(cart);
-        //setting the cart values
+        
         this.setCartValues(cart);
-        //show cart values
+        
         this.addCartItems(cart);
       }
       if (event.target.classList.contains("fa-minus-circle")) {
@@ -202,18 +198,18 @@ class UserInterface {
           );
           cart.splice(index, 1);
           Storage.setCartItems(cart);
-          //setting the cart values
+          
           this.setCartValues(cart);
-          //show cart values
+          
           this.addCartItems(cart);
-          //resetting buttons
+          
           this.resetButtons();
         }
         tempItem.amount = tempItem.amount - 1
         Storage.setCartItems(cart);
-        //setting the cart values
+        
         this.setCartValues(cart);
-        //show cart values
+        
         this.addCartItems(cart);
       }
     });
@@ -222,13 +218,13 @@ class UserInterface {
   clearCart(){
     cart = [];
     Storage.setCartItems(cart);
-    //setting the cart values
+    
     this.setCartValues(cart);
-    //show cart values
+    
     this.addCartItems(cart);
-    //removing show class
+    
     this.closeCart();
-    //resetting buttons
+    
     this.resetButtons();
   }
 
@@ -254,7 +250,6 @@ class UserInterface {
   }
 }
 
-//storage class
 class Storage {
   static saveProducts(products) {
     localStorage.setItem("Products", JSON.stringify(products));
@@ -281,20 +276,15 @@ document.addEventListener("DOMContentLoaded", () => {
   p.getProducts()
     .then((data) => {
       console.log(data);
-      // rendering products in the browser
+      
       ui.insertProductsInDom(data);
-      // saving products in the local storage
+      
       Storage.saveProducts(data);
       ui.initialSetup();
       ui.getBagButtons();
       ui.cartFuntionality();
     })
-    // then will be executed but just you wont recieve anything inside then
-    // .then(() => {
-    //   ui.initialSetup();
-    //   ui.getBagButtons();
-    //   ui.cartFuntionality();
-    // });
+    
 });
 
 cartClose.addEventListener("click", () => {
@@ -320,71 +310,22 @@ closeBuyModal.onclick = () => {
   buyModal.style.display = "none";
 }
 
-// clearCart.addEventListener("click", () => {
-//   const ui = new UserInterface();
-//   cart = [];
-//   Storage.setCartItems(cart);
-//   //setting the cart values
-//   ui.setCartValues(cart);
-//   //show cart values
-//   ui.addCartItems(cart);
-//   //removing show class
-//   ui.closeCart();
-//   //resetting buttons
-//   ui.resetButtons();
-// });
 
 clearCart.onclick = () => {
   const ui = new UserInterface();
   ui.clearCart();
 }
 
-// open the modal on click
 loginLink.onclick = function() {
   loginModal.style.display = "block";
 }
 
-// close the modal on click
 closeModal.onclick = function() {
   loginModal.style.display = "none";
 }
 
-// close modal When the user clicks anywhere outside of the modal
 window.onclick = function(event) {
   if (event.target == loginModal) {
     loginModal.style.display = "none";
   }
 }
-
-
-
-// console.log(document.URL);
-
-// let arr = [1,2,3]
-// let val = 0;
-// arr.forEach((el) => {
-//   val += el
-// })
-
-
-// export 
-// import
-
-// export const getProducts = async() => {
-//   try {
-//     const result = await fetch("data/products.json"); //returns response object
-//     let products = await result.json(); // to get the data from response object
-//     let data = products.items;
-//     data = data.map((item) => {
-//       const { title, price, type, rating } = item.fields;
-//       const id = item.sys.id;
-//       const url = item.fields.image.fields.file.url;
-//       return { title, price, type, rating, id, url };
-//     });
-//     return data;
-//   } catch (error) {
-//     console.log(error);
-//   }
-// }
-
-// import {getProducts} from './'
